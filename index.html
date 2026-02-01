@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>SP Window Cleaning – Instant Quote</title>
+<style>
+:root{
+  --brand:#1a4ed8;
+  --brand2:#5b8cff;
+  --bg:#f2f6ff;
+  --card:#fff;
+  --text:#0b0c10;
+  --muted:#64748b;
+  --radius:16px;
+}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:90px;
+}
+#app{max-width:760px;margin:auto;padding:14px;}
+.hero{
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  padding:22px;
+  border-radius:var(--radius);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.hero-logo{
+  width:54px;height:54px;border-radius:999px;overflow:hidden;
+  background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.75rem;
+}
+.hero-logo img{width:100%;height:100%;object-fit:cover;}
+.card{
+  background:#fff;padding:20px;border-radius:var(--radius);
+  box-shadow:0 6px 22px rgba(0,0,0,.06);margin-top:14px;
+}
+label{margin-top:10px;font-weight:600;display:block;}
+input,select,textarea{
+  width:100%;padding:12px;margin-top:6px;
+  border:1px solid #d6deeb;border-radius:12px;font-size:16px;
+}
+.addons-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.addon-box{border:1px solid #e6edf7;border-radius:12px;padding:10px;}
+.note{
+  background:#eef4ff;padding:10px;border-left:4px solid var(--brand);
+  border-radius:12px;margin-top:10px;
+}
+.estimate-box{
+  margin-top:16px;background:#f6f8ff;border-radius:16px;padding:16px;
+  display:none;
+}
+.btn{
+  padding:14px;border-radius:12px;border:none;width:100%;
+  font-weight:700;margin-top:12px;cursor:pointer;
+}
+.btn-primary{background:var(--brand);color:#fff;}
+#status{margin-top:10px;font-weight:700;text-align:center;}
+.footer{text-align:center;color:#94a3b8;margin-top:18px;font-size:.9rem;}
+
+.mobile-cta-bar{
+  position:fixed;left:0;right:0;bottom:0;
+  background:#0f172a;padding:8px;display:flex;gap:8px;
+}
+.mobile-cta-bar a{
+  flex:1;border:none;border-radius:999px;padding:10px 12px;font-weight:700;
+  text-align:center;text-decoration:none;color:#fff;display:block;
+  background:#1e293b;
+}
+.mobile-cta-bar .primary{background:#22c55e;color:#06210f;}
+@media(max-width:520px){
+  .addons-grid{grid-template-columns:1fr;}
+}
+.small{font-size:.9rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="hero">
+<div class="hero-logo">
+<img alt="SP Window Cleaning logo" id="logoImg" src="logo.png"/>
+</div>
+<div>
+<h2 style="margin:0;">SP Window Cleaning</h2>
+<div>Instant estimate &amp; booking request</div>
+</div>
+</div>
+<div class="card">
+<h3 style="margin-top:0;">1 &amp; 2. Service &amp; Extras</h3>
+<label>Total Windows</label>
+<input id="windows" min="0" placeholder="e.g. 24" type="number"/>
+<label>Add-ons</label>
+<div class="addons-grid">
+<div class="addon-box">
+<strong>Flyscreens</strong>
+<input id="flyscreens" min="0" placeholder="e.g. 10" type="number"/>
+</div>
+<div class="addon-box">
+<strong>Tracks (total)</strong>
+<input id="tracks" min="0" placeholder="e.g. 22" type="number"/>
+<div class="small" style="margin-top:6px;">Track buffer: +20% applied automatically when total tracks &gt; 10</div>
+</div>
+<div class="addon-box"><label for="storey">Storeys</label><select id="storey"><option value="1">1 storey</option><option value="2">2 storey (+15%)</option></select></div></div>
+<label>Postcode (for pricing)</label>
+<input id="postcodeInput" inputmode="numeric" maxlength="4" placeholder="e.g. 3198"/>
+<div class="note">Basic clean only — heavy staining, bore water &amp; builders debris priced separately.</div>
+<div class="estimate-box" id="estimateBox">
+<h3 style="margin-top:0;">Your Estimated Price</h3>
+<p><strong><span id="totalPrice">—</span> (incl GST)</strong></p>
+<p class="small" id="priceBreakdown" style="display:none;"></p>
+<p class="small">Minimum charge of $150 applies.</p>
+</div>
+<h3>3. Your details &amp; preferred booking</h3>
+<form action="https://formsubmit.co/info@spwindowcleaning.com.au" id="quoteForm" method="POST">
+<!-- FormSubmit controls -->
+<input name="_subject" type="hidden" value="New SPWC estimator booking request"/>
+<input name="_template" type="hidden" value="table"/>
+<input name="_captcha" type="hidden" value="false"/>
+<!-- Captured estimator values (hidden) -->
+<input id="h_windows" name="windows" type="hidden"/>
+<input id="h_flyscreens" name="flyscreens" type="hidden"/>
+<input id="h_tracks" name="tracks" type="hidden"/>
+<input id="h_postcode" name="postcode" type="hidden"/>
+<input id="h_incore" name="in_core_area" type="hidden"/>
+<input id="h_minutes" name="minutes_estimated" type="hidden"/>
+<input id="h_hours" name="hours_estimated" type="hidden"/>
+<input id="h_estimate" name="estimate" type="hidden"/>
+<input id="h_summary" name="summary" type="hidden"/>
+<label>Name</label><input id="name" name="name" required=""/>
+<label>Email</label><input id="email" name="email" required="" type="email"/>
+<label>Phone</label><input id="phone" name="phone" required=""/>
+<label>Address</label><textarea id="address" name="address" required=""></textarea>
+<label>Message (optional)</label><textarea id="message" name="message" placeholder="Any notes, access, preferred day/time, etc."></textarea>
+<button class="btn btn-primary" id="sendBtn" type="submit">Request booking</button>
+<p id="status"></p>
+<input id="h_storey" name="storeys" type="hidden"/><input id="h_two_storey_surcharge" name="two_storey_surcharge_applied" type="hidden"/><input id="h_over6_fee" name="over6hrs_fee_applied" type="hidden"/><input id="h_rate" name="hourly_rate_ex_gst" type="hidden"/><input id="h_subtotal" name="subtotal_ex_gst" type="hidden"/><input id="h_total" name="total_inc_gst" type="hidden"/></form>
+</div>
+<div class="footer">© SP Window Cleaning</div>
+</div>
+<script>(() => {
+  // Pricing rules (hidden from customer)
+  const MIN_PER_WINDOW = 8;       // minutes
+  const MIN_PER_TRACK  = 7;       // minutes
+  const MIN_PER_SCREEN = 1.5;     // minutes
+  const HOURLY_RATE_EX_GST = 135; // AUD per hour (ex GST)
+  const GST_RATE = 0.10;
+  const TWO_STOREY_SURCHARGE = 0.15;      // 15%
+  const OVER_6_HOURS_FEE_EX_GST = 100;    // AUD (ex GST)
+
+  const windowsEl  = document.getElementById("windows");
+  const tracksEl   = document.getElementById("tracks");
+  const screensEl  = document.getElementById("flyscreens");
+  const storeyEl   = document.getElementById("storey");
+  const postcodeEl = document.getElementById("postcodeInput"); // kept for enquiry details (not used for pricing)
+
+  const estimateBox = document.getElementById("estimateBox");
+  const totalPriceEl = document.getElementById("totalPrice");
+
+  // Hidden fields for email submission (FormSubmit)
+  const h_windows    = document.getElementById("h_windows");
+  const h_tracks     = document.getElementById("h_tracks");
+  const h_flyscreens = document.getElementById("h_flyscreens");
+  const h_minutes    = document.getElementById("h_minutes");
+  const h_hours      = document.getElementById("h_hours");
+  const h_postcode   = document.getElementById("h_postcode");
+  const h_incore     = document.getElementById("h_incore"); // legacy, kept
+  const h_estimate   = document.getElementById("h_estimate");
+  const h_summary    = document.getElementById("h_summary");
+
+  const h_storey              = document.getElementById("h_storey");
+  const h_two_storey_surcharge= document.getElementById("h_two_storey_surcharge");
+  const h_over6_fee           = document.getElementById("h_over6_fee");
+  const h_rate                = document.getElementById("h_rate");
+  const h_subtotal            = document.getElementById("h_subtotal");
+  const h_total               = document.getElementById("h_total");
+
+  function num(el) {
+    const v = parseFloat(el?.value ?? "0");
+    return Number.isFinite(v) && v > 0 ? v : 0;
+  }
+
+  function calc() {
+    const windows = num(windowsEl);
+    const tracks  = num(tracksEl);
+    const screens = num(screensEl);
+    const storeys = parseInt(storeyEl?.value ?? "1", 10) === 2 ? 2 : 1;
+
+    const totalMinutes =
+      (windows * MIN_PER_WINDOW) +
+      (tracks  * MIN_PER_TRACK) +
+      (screens * MIN_PER_SCREEN);
+
+    const hours = totalMinutes / 60;
+
+    let subtotalExGst = hours * HOURLY_RATE_EX_GST;
+
+    const twoStoreyApplied = storeys === 2;
+    if (twoStoreyApplied) subtotalExGst *= (1 + TWO_STOREY_SURCHARGE);
+
+    const over6Applied = hours > 6;
+    if (over6Applied) subtotalExGst += OVER_6_HOURS_FEE_EX_GST;
+
+    const totalIncGst = subtotalExGst * (1 + GST_RATE);
+
+    // UI: show ONLY the final price (incl GST)
+    if (estimateBox) estimateBox.style.display = "block";
+    if (totalPriceEl) {
+      totalPriceEl.textContent =
+        (Number.isFinite(totalIncGst) && totalMinutes > 0)
+          ? `$${totalIncGst.toFixed(2)} (incl GST)`
+          : "—";
+    }
+
+    // Hidden fields (for the enquiry email)
+    if (h_windows)    h_windows.value = windows.toString();
+    if (h_tracks)     h_tracks.value = tracks.toString();
+    if (h_flyscreens) h_flyscreens.value = screens.toString();
+    if (h_minutes)    h_minutes.value = totalMinutes.toFixed(1);
+    if (h_hours)      h_hours.value = hours.toFixed(2);
+    if (h_postcode)   h_postcode.value = (postcodeEl?.value ?? "").trim();
+    if (h_incore)     h_incore.value = "N/A";
+    if (h_estimate)   h_estimate.value = Number.isFinite(totalIncGst) ? totalIncGst.toFixed(2) : "";
+
+    if (h_storey)               h_storey.value = String(storeys);
+    if (h_two_storey_surcharge) h_two_storey_surcharge.value = twoStoreyApplied ? "Yes (15%)" : "No";
+    if (h_over6_fee)            h_over6_fee.value = over6Applied ? "Yes ($100 ex GST)" : "No";
+    if (h_rate)                 h_rate.value = `$${HOURLY_RATE_EX_GST}/hr ex GST`;
+    if (h_subtotal)             h_subtotal.value = Number.isFinite(subtotalExGst) ? subtotalExGst.toFixed(2) : "";
+    if (h_total)                h_total.value = Number.isFinite(totalIncGst) ? totalIncGst.toFixed(2) : "";
+
+    if (h_summary) {
+      h_summary.value =
+        `Windows: ${windows}, Tracks: ${tracks}, Flyscreens: ${screens}, ` +
+        `Storeys: ${storeys}, Minutes: ${totalMinutes.toFixed(1)}, Hours: ${hours.toFixed(2)}, ` +
+        `Two-storey surcharge: ${twoStoreyApplied ? "Yes" : "No"}, Over 6hrs fee: ${over6Applied ? "Yes" : "No"}, ` +
+        `Total (inc GST): ${Number.isFinite(totalIncGst) ? "$" + totalIncGst.toFixed(2) : "N/A"}`;
+    }
+  }
+
+  // Recalc on any change
+  ["input", "change"].forEach(evt => {
+    windowsEl?.addEventListener(evt, calc);
+    tracksEl?.addEventListener(evt, calc);
+    screensEl?.addEventListener(evt, calc);
+    storeyEl?.addEventListener(evt, calc);
+    postcodeEl?.addEventListener(evt, calc);
+  });
+
+  // Initial
+  calc();
+})();</script>
+<div class="mobile-cta-bar">
+<a href="tel:0411802259">Call</a>
+<a href="sms:0411802259">SMS</a>
+<a class="primary" href="#quoteForm">Book</a>
+</div>
+</body>
+</html>
